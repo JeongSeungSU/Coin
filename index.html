@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chart Replay Trader</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-surface" aria-label="Stock chart replay game">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Virtual practice</p>
+            <h1>Chart Replay Trader</h1>
+          </div>
+          <div class="topbar-actions">
+            <button id="newGameButton" class="button primary" type="button">Start Round</button>
+            <button id="finishButton" class="button ghost" type="button" disabled>Finish</button>
+          </div>
+        </header>
+
+        <section class="status-strip" aria-label="Current round status">
+          <div>
+            <span class="metric-label">Scenario</span>
+            <strong id="scenarioLabel">Hidden</strong>
+          </div>
+          <div>
+            <span class="metric-label">Progress</span>
+            <strong id="progressLabel">0 / 0</strong>
+          </div>
+          <div>
+            <span class="metric-label">Current Price</span>
+            <strong id="priceLabel">$0.00</strong>
+          </div>
+          <div>
+            <span class="metric-label">Equity</span>
+            <strong id="equityLabel">$10,000.00</strong>
+          </div>
+          <div>
+            <span class="metric-label">Return</span>
+            <strong id="returnLabel">0.00%</strong>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="chart-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Hidden Candlestick Replay</h2>
+                <p id="chartSubtitle">Start a round to reveal the first candles.</p>
+              </div>
+              <div class="chart-legend" aria-label="Chart legend">
+                <span><i class="legend up"></i> Up</span>
+                <span><i class="legend down"></i> Down</span>
+                <span><i class="legend equity"></i> Equity</span>
+                <span><i class="legend buy-marker"></i> Buy</span>
+                <span><i class="legend sell-marker"></i> Sell</span>
+              </div>
+            </div>
+            <canvas id="priceChart" width="1100" height="540" aria-label="Candlestick chart"></canvas>
+          </div>
+
+          <aside class="side-panel" aria-label="Trading controls and portfolio">
+            <section class="panel-block">
+              <div class="panel-header compact">
+                <h2>Trade</h2>
+                <span id="roundState" class="pill">Idle</span>
+              </div>
+              <div class="segmented" role="group" aria-label="Order size">
+                <button class="segment active" type="button" data-size="0.25">25%</button>
+                <button class="segment" type="button" data-size="0.5">50%</button>
+                <button class="segment" type="button" data-size="1">100%</button>
+              </div>
+              <div class="trade-grid">
+                <button id="buyButton" class="button buy" type="button" disabled>Buy</button>
+                <button id="sellButton" class="button sell" type="button" disabled>Sell</button>
+              </div>
+              <div class="step-actions">
+                <button id="nextButton" class="button primary full" type="button" disabled>Next Candle</button>
+                <button id="autoButton" class="button ghost full" type="button" disabled>Auto Play</button>
+              </div>
+              <p id="feedback" class="feedback" role="status">Start a round when ready.</p>
+            </section>
+
+            <section class="panel-block">
+              <h2>Portfolio</h2>
+              <dl class="portfolio-grid">
+                <div><dt>Cash</dt><dd id="cashValue">$10,000.00</dd></div>
+                <div><dt>BTC</dt><dd id="sharesValue">0</dd></div>
+                <div><dt>Avg Entry</dt><dd id="avgEntryValue">$0.00</dd></div>
+                <div><dt>Realized P/L</dt><dd id="realizedValue">$0.00</dd></div>
+                <div><dt>Unrealized P/L</dt><dd id="unrealizedValue">$0.00</dd></div>
+                <div><dt>Trades</dt><dd id="tradeCountValue">0</dd></div>
+              </dl>
+            </section>
+
+            <section class="panel-block">
+              <h2>Action Log</h2>
+              <ol id="tradeLog" class="trade-log">
+                <li>No actions yet.</li>
+              </ol>
+            </section>
+          </aside>
+        </section>
+
+        <section id="resultPanel" class="result-panel hidden" aria-label="Round results">
+          <div>
+            <p class="eyebrow">Round complete</p>
+            <h2 id="resultTitle">Scenario revealed</h2>
+          </div>
+          <div class="result-grid">
+            <div><span>Final Equity</span><strong id="resultEquity">$0.00</strong></div>
+            <div><span>Total Return</span><strong id="resultReturn">0.00%</strong></div>
+            <div><span>P/L</span><strong id="resultPnl">$0.00</strong></div>
+            <div><span>Buy & Hold</span><strong id="resultBenchmark">0.00%</strong></div>
+            <div><span>Trades</span><strong id="resultTrades">0</strong></div>
+            <div><span>Max Drawdown</span><strong id="resultDrawdown">0.00%</strong></div>
+          </div>
+        </section>
+
+        <section class="history-panel" aria-label="Recent local results">
+          <div class="panel-header">
+            <div>
+              <h2>Recent Results</h2>
+              <p>Stored on this browser only.</p>
+            </div>
+            <button id="clearHistoryButton" class="button ghost" type="button">Clear History</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Played</th>
+                  <th>Scenario</th>
+                  <th>Return</th>
+                  <th>P/L</th>
+                  <th>Trades</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody">
+                <tr><td colspan="5">No completed rounds yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="src/gameLogic.js"></script>
+    <script src="src/scenarios.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>
